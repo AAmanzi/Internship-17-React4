@@ -31,7 +31,7 @@ class Game extends Component {
       return {
         ...prevState,
         currentPlayer: (prevState.currentPlayer + 1) % 4,
-        setup: (prevState.currentPlayer === 3 ? prevState.setup : false)
+        setup: (prevState.currentPlayer !== 3 ? prevState.setup : false)
       };
     });
   };
