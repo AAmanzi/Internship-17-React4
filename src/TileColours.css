@@ -1,53 +1,59 @@
-.Hill{
+.Hill {
   background-color: #de5b1e;
 }
 
-.Hill:before, .Hill:after{
+.Hill:before,
+.Hill:after {
   border-top-color: #de5b1e;
   border-bottom-color: #de5b1e;
 }
 
-.Pasture{
+.Pasture {
   background-color: #6aa427;
 }
 
-.Pasture:before, .Pasture:after{
+.Pasture:before,
+.Pasture:after {
   border-top-color: #6aa427;
   border-bottom-color: #6aa427;
 }
 
-.Mountain{
+.Mountain {
   background-color: #9e9e9e;
 }
 
-.Mountain:before, .Mountain:after{
+.Mountain:before,
+.Mountain:after {
   border-top-color: #9e9e9e;
   border-bottom-color: #9e9e9e;
 }
 
-.Field{
-  background-color:#f0b747;
+.Field {
+  background-color: #f0b747;
 }
 
-.Field:before, .Field:after{
+.Field:before,
+.Field:after {
   border-top-color: #f0b747;
   border-bottom-color: #f0b747;
 }
 
-.Forest{
+.Forest {
   background-color: #275735;
 }
 
-.Forest:before, .Forest:after{
+.Forest:before,
+.Forest:after {
   border-top-color: #275735;
   border-bottom-color: #275735;
 }
 
-.Desert{
+.Desert {
   background-color: #ebcf99;
 }
 
-.Desert:before, .Desert:after{
+.Desert:before,
+.Desert:after {
   border-top-color: #ebcf99;
   border-bottom-color: #ebcf99;
 }
@@ -56,46 +62,46 @@
   background-color: red;
 }
 
-.BackgroundBlue{
+.BackgroundBlue {
   background-color: blue;
 }
 
-.BackgroundGreen{
+.BackgroundGreen {
   background-color: green;
 }
 
-.BackgroundYellow{
-  background-color: yellow;
+.BackgroundYellow {
+  background-color: goldenrod;
 }
 
 .StrokeRed {
   stroke: red;
 }
 
-.StrokeBlue{
+.StrokeBlue {
   stroke: blue;
-} 
+}
 
-.StrokeGreen{
+.StrokeGreen {
   stroke: green;
 }
 
-.StrokeYellow{
-  stroke: yellow;
+.StrokeYellow {
+  stroke: goldenrod;
 }
 
-.TextRed{
+.TextRed {
   color: red;
 }
 
-.TextBlue{
+.TextBlue {
   color: blue;
 }
 
-.TextGreen{
+.TextGreen {
   color: green;
 }
 
-.TextYellow{
-  color: yellow;
+.TextYellow {
+  color: goldenrod;
 }

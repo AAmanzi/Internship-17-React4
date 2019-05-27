@@ -1,12 +1,13 @@
-b{
+b {
   font-size: inherit;
 }
 
-.Game{
+.Game {
   display: flex;
   justify-content: flex-start;
 }
 
-.GamePanel{
-  width: 40%;
+.GamePanel {
+  margin-left: 200px;
+  width: 30%;
 }
