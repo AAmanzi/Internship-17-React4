@@ -90,6 +90,10 @@
   stroke: goldenrod;
 }
 
+.StrokeHighlighted {
+  stroke: #9dd2b5;
+}
+
 .TextRed {
   color: red;
 }

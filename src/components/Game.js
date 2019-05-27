@@ -10,6 +10,7 @@ class Game extends Component {
     this.state = {
       cities: startCities,
       roads: startRoads,
+      setup: true,
       currentPlayer: 0,
       players: players
     };
@@ -19,23 +20,40 @@ class Game extends Component {
   chits = getRandomChits();
 
   nextPlayer = () => {
+    if (
+      this.state.setup &&
+      this.state.players[this.state.currentPlayer].settlements !== 3
+    ) {
+      alert("You must place 2 settlements before continuing!");
+      return;
+    }
     this.setState(prevState => {
       return {
         ...prevState,
-        currentPlayer: (prevState.currentPlayer + 1) % 4
+        currentPlayer: (prevState.currentPlayer + 1) % 4,
+        setup: (prevState.currentPlayer === 3 ? prevState.setup : false)
       };
     });
   };
 
   handleCityClick = index => {
+    if (
+      this.state.setup &&
+      this.state.players[this.state.currentPlayer].settlements === 3
+    ) {
+      return;
+    }
     this.setState(prevState => {
+      let newPlayers = prevState.players;
       let newCities = [...prevState.cities];
       if (newCities[index] === "") {
-        newCities[index] = prevState.players[this.state.currentPlayer].name;
+        newCities[index] = newPlayers[prevState.currentPlayer].name;
+        newPlayers[prevState.currentPlayer].settlements--;
       }
       return {
         ...prevState,
-        cities: newCities
+        cities: newCities,
+        players: newPlayers
       };
     });
   };
