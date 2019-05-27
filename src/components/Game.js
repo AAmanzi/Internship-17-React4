@@ -1,38 +1,65 @@
 import React, { Component } from "react";
+import { startCities, startRoads } from "../constants";
+import { getDiceRoll } from "../utils";
 import { getRandomTiles, getRandomChits } from "../utils";
-import { boardTileRows, boardCityRows, startCities } from "../constants";
-import Tile from "./Tile";
-import City from "./City";
+import Board from "./Board";
 
 class Game extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cities: startCities
+      tiles: getRandomTiles(),
+      chits: getRandomChits(),
+      cities: startCities,
+      roads: startRoads,
+      playerTurn: "Red"
     };
   }
 
+  handleCityClick = index => {
+    this.setState(prevState => {
+      let newCities = [...prevState.cities];
+      newCities[index] = prevState.playerTurn;
+
+      return {
+        ...prevState,
+        cities: newCities
+      };
+    });
+  };
+
+  handleRoadClick = index => {
+    this.setState(prevState => {
+      let newRoads = [...prevState.roads];
+      newRoads[index] = prevState.playerTurn;
+
+      return {
+        ...prevState,
+        roads: newRoads
+      };
+    });
+  };
+
   render() {
-    const tiles = getRandomTiles();
-    const chits = getRandomChits();
     return (
-      <div className="Board">
-        {boardTileRows.map((row, i) => (
-          <div className="BoardRow" key={i}>
-            {tiles.slice(row.start, row.stop).map((tile, j) => (
-              <Tile colour={tile} value={chits[j]} key={j} />
-            ))}
-          </div>
-        ))}
-        <div className="BoardCities">
-          {boardCityRows.map((row, i) => (
-            <div className={`CityRow ${i % 2 ? "CityRowAlt" : ""}`} key={i}>
-              {this.state.cities.slice(row.start, row.stop).map((city, j) => (
-                <City colour={city} key={j}/>
-              ))}
-            </div>
-          ))}
+      <div className="Game">
+        <div className="GamePanel">
+          <h1>
+            Currently playing:{" "}
+            <b className={`Text${this.state.playerTurn}`}>
+              {this.state.playerTurn}
+            </b>
+          </h1>
+          {/* <h2>{`Dice roll: ${getDiceRoll()}`}</h2> */}
         </div>
+        <Board
+          tiles={this.state.tiles}
+          chits={this.state.chits}
+          cities={this.state.cities}
+          roads={this.state.roads}
+          handleCityClick={this.handleCityClick}
+          handleRoadClick={this.handleRoadClick}
+        />
       </div>
     );
   }

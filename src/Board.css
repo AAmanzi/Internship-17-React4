@@ -1,0 +1,104 @@
+.Board{
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.Chit {
+  border-radius: 50%;
+  align-self: center;
+  margin: auto;
+  width: 40px;
+  height: 40px;
+  background-color: #fff;
+  text-align: center;
+  font-size: 28px;
+}
+
+.Tile:before {
+  content: " ";
+  width: 0;
+  height: 0;
+  border-bottom: 30px solid black;
+  border-left: 52px solid transparent;
+  border-right: 52px solid transparent;
+  position: absolute;
+  top: -30px;
+}
+
+.Tile {
+  width: 104px;
+  height: 60px;
+  background-color: black;
+  position: relative;
+  margin: 0 5px;
+  display: flex;
+  cursor: pointer;
+}
+
+.Tile:after {
+  content: "";
+  width: 0;
+  position: absolute;
+  bottom: -30px;
+  border-top: 30px solid black;
+  border-left: 52px solid transparent;
+  border-right: 52px solid transparent;
+}
+
+.BoardRow {
+  display: flex;
+  margin: 20px;
+}
+
+.City{
+  width: 17.5px;
+  height: 17.5px;
+  margin-left: 47.5px;
+  margin-right: 47.5px;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.BoardCities{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: -20px;
+}
+
+.CityRow{
+  display: flex;
+  margin: 5px;
+}
+
+.CityRowAlt{
+  margin-bottom: 42.5px;
+}
+
+line{
+  stroke: #eae1c8;
+  stroke-width: 15px;
+  cursor: pointer;
+}
+
+.RoadRow{
+  display: flex;
+}
+
+.BoardRoads{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: -20px;
+  z-index: -1;
+}
+
+.RoadAlt{
+  margin-right: 50px;
+  margin-left: 50px;
+}

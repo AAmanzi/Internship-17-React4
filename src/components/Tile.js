@@ -4,7 +4,7 @@ import Chit from "./Chit";
 const Tile = props => {
   return (
     <div className={`Tile ${props.colour}`}>
-      <Chit value={props.colour !== "Desert" ? props.value : ""}/>
+      <Chit value={props.colour !== "Desert" ? props.value : ""} />
     </div>
   );
 };
