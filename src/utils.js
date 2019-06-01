@@ -39,3 +39,36 @@ export const getRandomChits = () => {
 export const getDiceRoll = () => {
   return Math.floor(Math.random() * 6 + 1) + Math.floor(Math.random() * 6 + 1);
 };
+
+export const handleNextPlayer = (currentPlayerIndex, setup) => {
+  return {
+    currentPlayerIndex: (currentPlayerIndex + 1) % 4,
+    setup: currentPlayerIndex !== 3 ? setup : false
+  };
+};
+
+export const handleAddCity = (cities, cityIndex, currentPlayerIndex, players) => {
+  let newCities = [...cities];
+  let newPlayers = players;
+  if (newCities[cityIndex] === "") {
+    newCities[cityIndex] = newPlayers[currentPlayerIndex].name;
+    newPlayers[currentPlayerIndex].settlements--;
+  }
+  return {
+    cities: newCities,
+    players: newPlayers
+  };
+};
+
+export const handleAddRoad = (roads, roadIndex, currentPlayerIndex, players) => {
+  let newRoads = [...roads];
+  let newPlayers = players;
+  if (newRoads[roadIndex] === "") {
+    newRoads[roadIndex] = newPlayers[currentPlayerIndex].name;
+    newPlayers[currentPlayerIndex].roads--;
+  }
+  return {
+    roads: newRoads,
+    players: newPlayers
+  };
+};

@@ -35,7 +35,6 @@
   position: relative;
   margin: 0 5px;
   display: flex;
-  cursor: pointer;
 }
 
 .Tile:after {
@@ -68,6 +67,7 @@
   align-items: center;
   position: absolute;
   top: -20px;
+  z-index: -1;
 }
 
 .CityRow {
@@ -77,12 +77,6 @@
 
 .CityRowAlt {
   margin-bottom: 42.5px;
-}
-
-line {
-  stroke: #eae1c8;
-  stroke-width: 15px;
-  cursor: pointer;
 }
 
 .RoadRow {
@@ -101,4 +95,20 @@ line {
 .RoadAlt {
   margin-right: 50px;
   margin-left: 50px;
+}
+
+.Action {
+  border: none;
+  background-color: #595856;
+  color: #f8f8f4;
+  margin: 0 10px;
+  padding: 10px 20px;
+}
+
+.SelectedAction {
+  background-color: #9dd2b5;
+}
+
+.IsActive{
+  z-index: 1;
 }

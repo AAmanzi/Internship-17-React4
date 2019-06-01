@@ -212,8 +212,42 @@ export const boardRoadRows = [
 ];
 
 export const players = [
-  { name: "Red", settlements: 5, cities: 4, roads: 15 },
-  { name: "Blue", settlements: 5, cities: 4, roads: 15 },
-  { name: "Green", settlements: 5, cities: 4, roads: 15 },
-  { name: "Yellow", settlements: 5, cities: 4, roads: 15 }
+  {
+    name: "Red",
+    settlements: 5,
+    cities: 4,
+    roads: 15,
+    resources: [],
+    gamePoints: 0
+  },
+  {
+    name: "Blue",
+    settlements: 5,
+    cities: 4,
+    roads: 15,
+    resources: [],
+    gamePoints: 0
+  },
+  {
+    name: "Green",
+    settlements: 5,
+    cities: 4,
+    roads: 15,
+    resources: [],
+    gamePoints: 0
+  },
+  {
+    name: "Yellow",
+    settlements: 5,
+    cities: 4,
+    roads: 15,
+    resources: [],
+    gamePoints: 0
+  }
 ];
+
+export const actionTypes = [
+  {type: "buildSettlement", value: "Build settlement"},
+  {type: "buildRoad", value: "Build road"},
+  {type: "buildCity", value: "Build city"}
+]

@@ -1,11 +1,22 @@
 import React from "react";
+import { connect } from "react-redux";
 import { boardTileRows, boardCityRows, boardRoadRows } from "../constants";
+import { addCity, addRoad } from "../redux/modules/board";
 import Tile from "./Tile";
 import City from "./City";
 import Road from "./Road";
 
 const Board = props => {
-  const { tiles, chits } = props;
+  const {
+    activeAction,
+    tiles,
+    chits,
+    roads,
+    cities,
+    currentPlayerIndex,
+    players,
+    setup
+  } = props;
   return (
     <div className="Board">
       {boardTileRows.map((row, i) => (
@@ -15,25 +26,37 @@ const Board = props => {
           ))}
         </div>
       ))}
-      <div className="BoardCities">
+      <div
+        className={`BoardCities ${
+          activeAction === "buildSettlement" ? "IsActive" : ""
+        }`}
+      >
         {boardCityRows.map((row, i) => (
           <div className={`CityRow ${i % 2 ? "CityRowAlt" : ""}`} key={i}>
-            {props.cities.slice(row.start, row.stop).map((city, j) => (
+            {cities.slice(row.start, row.stop).map((city, j) => (
               <City
                 colour={`Background${city}`}
                 key={j}
                 handleClick={() => {
-                  props.handleCityClick(row.start + j);
+                  props.addCity(
+                    cities,
+                    row.start + j,
+                    currentPlayerIndex,
+                    players,
+                    setup
+                  );
                 }}
               />
             ))}
           </div>
         ))}
       </div>
-      <div className="BoardRoads">
+      <div className={`BoardRoads ${
+          activeAction === "buildRoad" ? "IsActive" : ""
+        }`}>
         {boardRoadRows.map((row, i) => (
           <div className="RoadRow" key={i}>
-            {props.roads.slice(row.start, row.stop).map((road, j) => (
+            {roads.slice(row.start, row.stop).map((road, j) => (
               <Road
                 direction={
                   i % 2
@@ -50,7 +73,13 @@ const Board = props => {
                 colour={`Stroke${road}`}
                 key={j}
                 handleClick={() => {
-                  props.handleRoadClick(row.start + j);
+                  props.addRoad(
+                    roads,
+                    row.start + j,
+                    currentPlayerIndex,
+                    players,
+                    setup
+                  );
                 }}
               />
             ))}
@@ -61,4 +90,22 @@ const Board = props => {
   );
 };
 
-export default Board;
+const mapStateToProps = state => {
+  return {
+    activeAction: state.game.activeAction,
+    tiles: state.board.tiles,
+    chits: state.board.chits,
+    cities: state.board.cities,
+    roads: state.board.roads
+  };
+};
+
+const mapDispatchToProps = {
+  addCity,
+  addRoad
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Board);

@@ -2,6 +2,16 @@ b {
   font-size: inherit;
 }
 
+button{
+  cursor: pointer;
+}
+
+line {
+  stroke: #eae1c8;
+  stroke-width: 15px;
+  cursor: pointer;
+}
+
 .Game {
   display: flex;
   justify-content: flex-start;
