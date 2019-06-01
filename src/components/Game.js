@@ -33,7 +33,14 @@ class Game extends Component {
                   className={`Action ${
                     activeAction === action.type ? "SelectedAction" : ""
                   }`}
-                  onClick={() => this.props.setAction(action.type)}
+                  onClick={() =>
+                    this.props.setAction(
+                      action.type,
+                      setup,
+                      currentPlayerIndex,
+                      players
+                    )
+                  }
                   key={index}
                 >
                   {action.value}
@@ -41,6 +48,10 @@ class Game extends Component {
               );
             })}
           </div>
+
+          {activeAction === "insufficientResources" ? (
+            <div className="TextRed">Insufficient resources</div>
+          ) : null}
 
           <div className="ResourceContainer">
             <div className="Resource">{`Brick: ${

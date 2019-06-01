@@ -122,6 +122,7 @@ export const handleAddCity = (
 
     newCities[cityIndex] = newPlayers[currentPlayerIndex].name;
     newPlayers[currentPlayerIndex].settlements--;
+    newPlayers[currentPlayerIndex].gamePoints++;
   }
   return {
     cities: newCities,
@@ -145,4 +146,25 @@ export const handleAddRoad = (
     roads: newRoads,
     players: newPlayers
   };
+};
+
+export const handleSetAction = (action, setup, currentPlayerIndex, players) => {
+  if (setup === true) {
+    return action;
+  }
+  if (
+    (action === "buildSettlement" &&
+      (players[currentPlayerIndex].resources.Brick < 1 ||
+        players[currentPlayerIndex].resources.Wool < 1 ||
+        players[currentPlayerIndex].resources.Grain < 1 ||
+        players[currentPlayerIndex].resources.Lumber < 1)) ||
+    (action === "buildRoad" &&
+      (players[currentPlayerIndex].resources.Brick < 1 ||
+        players[currentPlayerIndex].resources.Lumber < 1)) ||
+    (action === "buildCity" &&
+      (players[currentPlayerIndex].resources.Ore < 3 ||
+        players[currentPlayerIndex].resources.Grain < 2))
+  ) {
+    return "insufficientResources";
+  }
 };

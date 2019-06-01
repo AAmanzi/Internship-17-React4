@@ -35,6 +35,7 @@ const Board = props => {
           <div className={`CityRow ${i % 2 ? "CityRowAlt" : ""}`} key={i}>
             {cities.slice(row.start, row.stop).map((city, j) => (
               <City
+                isAvailable={activeAction === "buildSettlement"}
                 colour={`Background${city}`}
                 key={j}
                 handleClick={() => {
@@ -43,7 +44,8 @@ const Board = props => {
                     row.start + j,
                     currentPlayerIndex,
                     players,
-                    setup
+                    setup,
+                    activeAction
                   );
                 }}
               />
@@ -51,9 +53,11 @@ const Board = props => {
           </div>
         ))}
       </div>
-      <div className={`BoardRoads ${
+      <div
+        className={`BoardRoads ${
           activeAction === "buildRoad" ? "IsActive" : ""
-        }`}>
+        }`}
+      >
         {boardRoadRows.map((row, i) => (
           <div className="RoadRow" key={i}>
             {roads.slice(row.start, row.stop).map((road, j) => (
@@ -70,6 +74,7 @@ const Board = props => {
                     : "descent"
                 }
                 classAlt={i % 2 ? "RoadAlt" : ""}
+                isAvailable={activeAction === "buildRoad"}
                 colour={`Stroke${road}`}
                 key={j}
                 handleClick={() => {
@@ -78,7 +83,8 @@ const Board = props => {
                     row.start + j,
                     currentPlayerIndex,
                     players,
-                    setup
+                    setup,
+                    activeAction
                   );
                 }}
               />

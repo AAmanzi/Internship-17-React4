@@ -8,7 +8,7 @@ const SET_ACTION = "SET_ACTION";
 // initial state
 const initialState = {
   activeAction: "buildSettlement",
-  setup: false,
+  setup: true,
   currentPlayerIndex: 0,
   players: gameConstants.players,
   diceRoll: 0
@@ -32,10 +32,10 @@ export const nextPlayer = (players, currentPlayerIndex, setup, tiles, chits) => 
   });
 };
 
-export const setAction = action => dispatch => {
+export const setAction = (action, setup, currentPlayerIndex, players) => dispatch => {
   return dispatch({
     type: SET_ACTION,
-    payload: action
+    payload: gameUtils.handleSetAction(action, setup, currentPlayerIndex, players)
   });
 };
 
@@ -45,7 +45,7 @@ const reducer = (state = initialState, action) => {
     case NEXT_PLAYER:
       return {
         ...state,
-        activeAction: "buildSettlement",
+        activeAction: action.payload.setup === true ? "buildSettlement" : "",
         players: action.payload.players,
         currentPlayerIndex: action.payload.currentPlayerIndex,
         setup: action.payload.setup,

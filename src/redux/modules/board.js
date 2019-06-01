@@ -19,9 +19,13 @@ export const addCity = (
   cityIndex,
   currentPlayerIndex,
   players,
-  setup
+  setup,
+  action
 ) => dispatch => {
-  if(setup === true && players[currentPlayerIndex].settlements === 3){
+  if (action !== "buildSettlement") {
+    return;
+  }
+  if (setup === true && players[currentPlayerIndex].settlements === 3) {
     return;
   }
   return dispatch({
@@ -40,9 +44,13 @@ export const addRoad = (
   roadIndex,
   currentPlayerIndex,
   players,
-  setup
+  setup,
+  action
 ) => dispatch => {
-  if(setup === true && players[currentPlayerIndex].roads === 13){
+  if (action !== "buildRoad") {
+    return;
+  }
+  if (setup === true && players[currentPlayerIndex].roads === 13) {
     return;
   }
   return dispatch({

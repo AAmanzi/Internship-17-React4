@@ -9,7 +9,7 @@ button{
 line {
   stroke: #eae1c8;
   stroke-width: 15px;
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 
 .Game {

@@ -58,7 +58,7 @@
   margin-left: 47.5px;
   margin-right: 47.5px;
   border: 1px solid black;
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 
 .BoardCities {
@@ -118,4 +118,8 @@
 
 .IsActive{
   z-index: 2;
+}
+
+.IsAvailable{
+  cursor: pointer;
 }
