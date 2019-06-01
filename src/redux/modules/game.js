@@ -8,19 +8,27 @@ const SET_ACTION = "SET_ACTION";
 // initial state
 const initialState = {
   activeAction: "buildSettlement",
-  setup: true,
+  setup: false,
   currentPlayerIndex: 0,
-  players: gameConstants.players
+  players: gameConstants.players,
+  diceRoll: 0
 };
 
 // action creators
-export const nextPlayer = (players, currentPlayerIndex, setup) => dispatch => {
-  if (setup === true && players[currentPlayerIndex].settlements !== 3) {
+export const nextPlayer = (players, currentPlayerIndex, setup, tiles, chits) => dispatch => {
+  if (
+    setup === true &&
+    (
+      players[currentPlayerIndex].settlements !== 3 ||
+      players[currentPlayerIndex].roads !== 13
+    )
+  ) {
+    alert("You must build 2 settlements and 2 roads on your first turn!");
     return;
   }
   return dispatch({
     type: NEXT_PLAYER,
-    payload: gameUtils.handleNextPlayer(currentPlayerIndex, setup)
+    payload: gameUtils.handleNextPlayer(players, currentPlayerIndex, setup, tiles, chits)
   });
 };
 
@@ -37,14 +45,17 @@ const reducer = (state = initialState, action) => {
     case NEXT_PLAYER:
       return {
         ...state,
+        activeAction: "buildSettlement",
+        players: action.payload.players,
         currentPlayerIndex: action.payload.currentPlayerIndex,
-        setup: action.payload.setup
+        setup: action.payload.setup,
+        diceRoll: action.payload.diceRoll
       };
     case SET_ACTION:
       return {
         ...state,
         activeAction: action.payload
-      }
+      };
     default:
       return state;
   }

@@ -6,7 +6,15 @@ import Board from "./Board";
 
 class Game extends Component {
   render() {
-    const { activeAction, setup, currentPlayerIndex, players } = this.props;
+    const {
+      activeAction,
+      setup,
+      currentPlayerIndex,
+      players,
+      diceRoll,
+      tiles,
+      chits
+    } = this.props;
 
     return (
       <div className="Game">
@@ -17,24 +25,50 @@ class Game extends Component {
               {players[currentPlayerIndex].name}
             </b>
           </h1>
-          {/* <h2>{`Dice roll: ${getDiceRoll()}`}</h2> */}
+          {setup === false ? <h2>{`Dice roll: ${diceRoll}`}</h2> : null}
           <div className="ActionContainer">
             {actionTypes.map((action, index) => {
-              return(
-              <button
-                className={`Action ${
-                  activeAction === action.type ? "SelectedAction" : ""
-                }`}
-                onClick={() => this.props.setAction(action.type)}
-                key={index}
-              >
-                {action.value}
-              </button>
-            )})}
+              return (
+                <button
+                  className={`Action ${
+                    activeAction === action.type ? "SelectedAction" : ""
+                  }`}
+                  onClick={() => this.props.setAction(action.type)}
+                  key={index}
+                >
+                  {action.value}
+                </button>
+              );
+            })}
           </div>
+
+          <div className="ResourceContainer">
+            <div className="Resource">{`Brick: ${
+              players[currentPlayerIndex].resources.Brick
+            }`}</div>
+            <div className="Resource">{`Wool: ${
+              players[currentPlayerIndex].resources.Wool
+            }`}</div>
+            <div className="Resource">{`Ore: ${
+              players[currentPlayerIndex].resources.Ore
+            }`}</div>
+            <div className="Resource">{`Grain: ${
+              players[currentPlayerIndex].resources.Grain
+            }`}</div>
+            <div className="Resource">{`Lumber: ${
+              players[currentPlayerIndex].resources.Lumber
+            }`}</div>
+          </div>
+
           <button
             onClick={() =>
-              this.props.nextPlayer(players, currentPlayerIndex, setup)
+              this.props.nextPlayer(
+                players,
+                currentPlayerIndex,
+                setup,
+                tiles,
+                chits
+              )
             }
           >
             Finish turn
@@ -55,7 +89,10 @@ const mapStateToProps = state => {
     activeAction: state.game.activeAction,
     setup: state.game.setup,
     currentPlayerIndex: state.game.currentPlayerIndex,
-    players: state.game.players
+    players: state.game.players,
+    diceRoll: state.game.diceRoll,
+    tiles: state.board.tiles,
+    chits: state.board.chits
   };
 };
 

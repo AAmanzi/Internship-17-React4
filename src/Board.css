@@ -67,7 +67,7 @@
   align-items: center;
   position: absolute;
   top: -20px;
-  z-index: -1;
+  z-index: 1;
 }
 
 .CityRow {
@@ -93,8 +93,10 @@
 }
 
 .RoadAlt {
-  margin-right: 50px;
-  margin-left: 50px;
+  display: flex;
+  align-items: center;
+  margin: 10px 50px;
+  height: 40px;
 }
 
 .Action {
@@ -105,10 +107,15 @@
   padding: 10px 20px;
 }
 
+.ResourceContainer{
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .SelectedAction {
   background-color: #9dd2b5;
 }
 
 .IsActive{
-  z-index: 1;
+  z-index: 2;
 }

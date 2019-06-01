@@ -42,7 +42,7 @@ export const addRoad = (
   players,
   setup
 ) => dispatch => {
-  if(setup === true && players[currentPlayerIndex].roads === 12){
+  if(setup === true && players[currentPlayerIndex].roads === 13){
     return;
   }
   return dispatch({

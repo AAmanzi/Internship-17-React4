@@ -1,4 +1,4 @@
-import { tiles, chits } from "./constants";
+import { tiles, chits, tileAdjacentCities, tileResource } from "./constants";
 
 export const getRandomTiles = () => {
   let randomTiles = tiles;
@@ -36,21 +36,90 @@ export const getRandomChits = () => {
   return randomChits;
 };
 
+export const getAllIndexes = (arr, val) => {
+  var indexes = [],
+    i = -1;
+  while ((i = arr.indexOf(val, i + 1)) !== -1) {
+    indexes.push(i);
+  }
+  return indexes;
+};
+
+export const getResourceFromTile = tile => {
+  return tileResource[tile];
+};
+
 export const getDiceRoll = () => {
   return Math.floor(Math.random() * 6 + 1) + Math.floor(Math.random() * 6 + 1);
 };
 
-export const handleNextPlayer = (currentPlayerIndex, setup) => {
+export const updatePlayerResources = (players, diceRoll, tiles, chits) => {
+  const producingTileIndexes = getAllIndexes(chits, diceRoll);
+
+  const newPlayers = players.map(player => {
+    const playerAffectingTileIndexes = producingTileIndexes.filter(index =>
+      player.tilesAffectedBy.includes(index)
+    );
+    const playerAffectingTiles = tiles.filter((tile, index) =>
+      playerAffectingTileIndexes.includes(index)
+    );
+
+    let newResources = { ...player.resources };
+
+    playerAffectingTiles.forEach(tile => {
+      const resource = getResourceFromTile(tile);
+      if (resource !== "") {
+        newResources[resource]++;
+      }
+    });
+
+    return {
+      ...player,
+      resources: { ...newResources }
+    };
+  });
+
+  return newPlayers;
+};
+
+export const handleNextPlayer = (
+  players,
+  currentPlayerIndex,
+  setup,
+  tiles,
+  chits
+) => {
+  const newDiceRoll = getDiceRoll();
   return {
+    players:
+      setup === false
+        ? updatePlayerResources(players, newDiceRoll, tiles, chits)
+        : players,
     currentPlayerIndex: (currentPlayerIndex + 1) % 4,
-    setup: currentPlayerIndex !== 3 ? setup : false
+    setup: currentPlayerIndex !== 3 ? setup : false,
+    diceRoll: newDiceRoll
   };
 };
 
-export const handleAddCity = (cities, cityIndex, currentPlayerIndex, players) => {
+export const handleAddCity = (
+  cities,
+  cityIndex,
+  currentPlayerIndex,
+  players
+) => {
   let newCities = [...cities];
   let newPlayers = players;
   if (newCities[cityIndex] === "") {
+    let elementsToAppend = tileAdjacentCities.filter(element =>
+      element.cities.includes(cityIndex)
+    );
+    elementsToAppend = elementsToAppend.map(element => element.tile);
+
+    newPlayers[currentPlayerIndex].tilesAffectedBy = [
+      ...newPlayers[currentPlayerIndex].tilesAffectedBy,
+      ...elementsToAppend
+    ];
+
     newCities[cityIndex] = newPlayers[currentPlayerIndex].name;
     newPlayers[currentPlayerIndex].settlements--;
   }
@@ -60,7 +129,12 @@ export const handleAddCity = (cities, cityIndex, currentPlayerIndex, players) =>
   };
 };
 
-export const handleAddRoad = (roads, roadIndex, currentPlayerIndex, players) => {
+export const handleAddRoad = (
+  roads,
+  roadIndex,
+  currentPlayerIndex,
+  players
+) => {
   let newRoads = [...roads];
   let newPlayers = players;
   if (newRoads[roadIndex] === "") {
