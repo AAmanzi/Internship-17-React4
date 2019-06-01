@@ -28,6 +28,9 @@ class Game extends Component {
           {setup === false ? <h2>{`Dice roll: ${diceRoll}`}</h2> : null}
           <div className="ActionContainer">
             {actionTypes.map((action, index) => {
+              if (setup === true && action.type === "buildCity") {
+                return null;
+              }
               return (
                 <button
                   className={`Action ${

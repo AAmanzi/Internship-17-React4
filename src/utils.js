@@ -167,4 +167,5 @@ export const handleSetAction = (action, setup, currentPlayerIndex, players) => {
   ) {
     return "insufficientResources";
   }
+  return action;
 };
