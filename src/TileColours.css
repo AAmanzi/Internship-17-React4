@@ -60,18 +60,22 @@
 
 .BackgroundRed {
   background-color: red;
+  border-color: black;
 }
 
 .BackgroundBlue {
   background-color: blue;
+  border-color: black;
 }
 
 .BackgroundGreen {
   background-color: green;
+  border-color: black;
 }
 
 .BackgroundYellow {
   background-color: goldenrod;
+  border-color: black;
 }
 
 .StrokeRed {

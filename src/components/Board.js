@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { getAvailableRoads } from "../utils";
+import { getAvailableRoads, getAvailableCities } from "../utils";
 import { boardTileRows, boardCityRows, boardRoadRows } from "../constants";
 import { addCity, addRoad } from "../redux/modules/board";
 import Tile from "./Tile";
@@ -20,7 +20,15 @@ const Board = props => {
     upgradedCities
   } = props;
 
-  const availableRoads = getAvailableRoads(roads, cities, players[currentPlayerIndex]);
+  const availableRoads = getAvailableRoads(
+    roads,
+    cities,
+    players[currentPlayerIndex]
+  );
+  const availableCities = getAvailableCities(
+    roads,
+    players[currentPlayerIndex]
+  );
 
   return (
     <div className="Board">
@@ -42,9 +50,14 @@ const Board = props => {
               <City
                 isCity={upgradedCities.includes(row.start + j)}
                 isAvailable={
-                  (activeAction === "buildSettlement" && city === "") ||
+                  (activeAction === "buildSettlement" &&
+                    city === "" &&
+                    ((availableCities.includes(row.start + j) &&
+                      setup === false) ||
+                      setup === true)) ||
                   (activeAction === "buildCity" &&
-                    city === players[currentPlayerIndex].name)
+                    city === players[currentPlayerIndex].name &&
+                    upgradedCities.includes(row.start + j) === false)
                 }
                 colour={`Background${city}`}
                 key={j}
@@ -56,7 +69,8 @@ const Board = props => {
                     players,
                     setup,
                     activeAction,
-                    upgradedCities
+                    upgradedCities,
+                    availableCities
                   );
                 }}
               />

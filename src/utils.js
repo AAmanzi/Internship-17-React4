@@ -257,3 +257,19 @@ export const getAvailableRoads = (roads, cities, currentPlayer) => {
 
   return currentPlayerAvailableRoads;
 };
+
+export const getAvailableCities = (roads, currentPlayer) => {
+  const currentPlayerRoads = getAllIndexes(roads, currentPlayer.name);
+
+  const playerRoadsAdjacentCities = [];
+
+  currentPlayerRoads.forEach(road => {
+    cityAdjacentRoads.forEach((roads, cityIndex) => {
+      if (roads.includes(road)) {
+        playerRoadsAdjacentCities.push(cityIndex);
+      }
+    });
+  })
+
+  return playerRoadsAdjacentCities;
+}

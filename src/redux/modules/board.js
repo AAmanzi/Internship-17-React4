@@ -26,12 +26,21 @@ export const addCity = (
   players,
   setup,
   action,
-  upgradedCities
+  upgradedCities,
+  availableCities
 ) => dispatch => {
   if (action !== "buildSettlement" && action !== "buildCity") {
     return;
   }
   if (setup === true && players[currentPlayerIndex].settlements === 3) {
+    return;
+  }
+  if (
+    (setup === false &&
+      availableCities.includes(cityIndex) === false &&
+      cities[cityIndex] !== players[currentPlayerIndex].name) ||
+    upgradedCities.includes(cityIndex) === true
+  ) {
     return;
   }
   const toDispatch = gameUtils.handleAddCity(
@@ -42,7 +51,7 @@ export const addCity = (
     setup,
     action,
     upgradedCities
-  )
+  );
 
   dispatch({
     type: EDIT_PLAYERS,
@@ -57,7 +66,7 @@ export const addCity = (
   dispatch({
     type: UPGRADE_CITY,
     payload: toDispatch.upgradedCities
-  })
+  });
 
   return dispatch({
     type: ADD_CITY,
@@ -80,7 +89,7 @@ export const addRoad = (
   if (setup === true && players[currentPlayerIndex].roads === 13) {
     return;
   }
-  if(availableRoads.includes(roadIndex) === false){
+  if (availableRoads.includes(roadIndex) === false) {
     return;
   }
 
@@ -120,7 +129,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         upgradedCities: action.payload
-      }
+      };
     case ADD_ROAD:
       return {
         ...state,

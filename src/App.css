@@ -7,7 +7,7 @@ button{
 }
 
 line {
-  stroke: #eae1c8;
+  stroke: transparent;
   stroke-width: 15px;
 }
 
