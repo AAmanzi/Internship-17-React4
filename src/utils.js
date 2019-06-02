@@ -60,8 +60,13 @@ export const updatePlayerResources = (players, diceRoll, tiles, chits) => {
     const playerAffectingTileIndexes = producingTileIndexes.filter(index =>
       player.tilesAffectedBy.includes(index)
     );
-    const playerAffectingTiles = tiles.filter((tile, index) =>
+
+    const playerProducingTileIndexes = player.tilesAffectedBy.filter(index =>
       playerAffectingTileIndexes.includes(index)
+    );
+
+    const playerAffectingTiles = playerProducingTileIndexes.map(
+      index => tiles[index]
     );
 
     let newResources = { ...player.resources };
@@ -126,7 +131,7 @@ export const handleAddCity = (
 
     newCities[cityIndex] = newPlayers[currentPlayerIndex].name;
     newPlayers[currentPlayerIndex].settlements--;
-    if(setup === false){
+    if (setup === false) {
       newPlayers[currentPlayerIndex].resources.Brick--;
       newPlayers[currentPlayerIndex].resources.Grain--;
       newPlayers[currentPlayerIndex].resources.Wool--;
@@ -134,7 +139,7 @@ export const handleAddCity = (
       newAction = "";
     }
     newPlayers[currentPlayerIndex].gamePoints++;
-    if(newPlayers[currentPlayerIndex].settlements === 3 && setup === true){
+    if (newPlayers[currentPlayerIndex].settlements === 3 && setup === true) {
       newAction = "buildRoad";
     }
   }
@@ -159,7 +164,7 @@ export const handleAddRoad = (
   if (newRoads[roadIndex] === "") {
     newRoads[roadIndex] = newPlayers[currentPlayerIndex].name;
     newPlayers[currentPlayerIndex].roads--;
-    if(setup === false){
+    if (setup === false) {
       newPlayers[currentPlayerIndex].resources.Lumber--;
       newPlayers[currentPlayerIndex].resources.Brick--;
       newAction = "";
