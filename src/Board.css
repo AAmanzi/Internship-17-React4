@@ -58,6 +58,7 @@
   margin-left: 47.5px;
   margin-right: 47.5px;
   border: 1px solid black;
+  border-radius: 50%;
   /* cursor: pointer; */
 }
 
@@ -107,7 +108,7 @@
   padding: 10px 20px;
 }
 
-.ResourceContainer{
+.ResourceContainer {
   display: flex;
   flex-direction: column;
 }
@@ -116,10 +117,17 @@
   background-color: #9dd2b5;
 }
 
-.IsActive{
+.IsActive {
   z-index: 2;
 }
 
-.IsAvailable{
+.IsAvailable {
   cursor: pointer;
+  background-color: #00baba77;
+  stroke: #00baba77;
+  stroke-linecap: round; 
+}
+
+.IsCity {
+  border-radius: 0;
 }

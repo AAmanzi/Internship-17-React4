@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { nextPlayer, setAction } from "../redux/modules/game";
 import { actionTypes } from "../constants";
+import { getWinner } from "../utils";
 import Board from "./Board";
+import WinnerDisplay from "./WinnerDisplay";
 
 class Game extends Component {
   render() {
@@ -15,6 +17,12 @@ class Game extends Component {
       tiles,
       chits
     } = this.props;
+
+    const winner = getWinner(players);
+
+    if (winner !== undefined) {
+      return <WinnerDisplay winner={winner} />;
+    }
 
     return (
       <div className="Game">

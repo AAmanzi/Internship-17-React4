@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { getAvailableRoads } from "../utils";
 import { boardTileRows, boardCityRows, boardRoadRows } from "../constants";
 import { addCity, addRoad } from "../redux/modules/board";
 import Tile from "./Tile";
@@ -15,8 +16,12 @@ const Board = props => {
     cities,
     currentPlayerIndex,
     players,
-    setup
+    setup,
+    upgradedCities
   } = props;
+
+  const availableRoads = getAvailableRoads(roads, cities, players[currentPlayerIndex]);
+
   return (
     <div className="Board">
       {boardTileRows.map((row, i) => (
@@ -35,7 +40,12 @@ const Board = props => {
           <div className={`CityRow ${i % 2 ? "CityRowAlt" : ""}`} key={i}>
             {cities.slice(row.start, row.stop).map((city, j) => (
               <City
-                isAvailable={activeAction === "buildSettlement"}
+                isCity={upgradedCities.includes(row.start + j)}
+                isAvailable={
+                  (activeAction === "buildSettlement" && city === "") ||
+                  (activeAction === "buildCity" &&
+                    city === players[currentPlayerIndex].name)
+                }
                 colour={`Background${city}`}
                 key={j}
                 handleClick={() => {
@@ -45,7 +55,8 @@ const Board = props => {
                     currentPlayerIndex,
                     players,
                     setup,
-                    activeAction
+                    activeAction,
+                    upgradedCities
                   );
                 }}
               />
@@ -74,7 +85,11 @@ const Board = props => {
                     : "descent"
                 }
                 classAlt={i % 2 ? "RoadAlt" : ""}
-                isAvailable={activeAction === "buildRoad"}
+                isAvailable={
+                  activeAction === "buildRoad" &&
+                  road === "" &&
+                  availableRoads.includes(row.start + j)
+                }
                 colour={`Stroke${road}`}
                 key={j}
                 handleClick={() => {
@@ -84,7 +99,8 @@ const Board = props => {
                     currentPlayerIndex,
                     players,
                     setup,
-                    activeAction
+                    activeAction,
+                    availableRoads
                   );
                 }}
               />
@@ -102,7 +118,8 @@ const mapStateToProps = state => {
     tiles: state.board.tiles,
     chits: state.board.chits,
     cities: state.board.cities,
-    roads: state.board.roads
+    roads: state.board.roads,
+    upgradedCities: state.board.upgradedCities
   };
 };
 

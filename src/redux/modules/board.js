@@ -3,6 +3,7 @@ import * as gameConstants from "../../constants";
 
 // action types
 const ADD_CITY = "ADD_CITY";
+const UPGRADE_CITY = "UPGRADE_CITY";
 const ADD_ROAD = "ADD_ROAD";
 
 const EDIT_PLAYERS = "EDIT_PLAYERS";
@@ -13,6 +14,7 @@ const initialState = {
   tiles: gameUtils.getRandomTiles(),
   chits: gameUtils.getRandomChits(),
   cities: gameConstants.startCities,
+  upgradedCities: [],
   roads: gameConstants.startRoads
 };
 
@@ -23,9 +25,10 @@ export const addCity = (
   currentPlayerIndex,
   players,
   setup,
-  action
+  action,
+  upgradedCities
 ) => dispatch => {
-  if (action !== "buildSettlement") {
+  if (action !== "buildSettlement" && action !== "buildCity") {
     return;
   }
   if (setup === true && players[currentPlayerIndex].settlements === 3) {
@@ -37,8 +40,9 @@ export const addCity = (
     currentPlayerIndex,
     players,
     setup,
-    action
-  );
+    action,
+    upgradedCities
+  )
 
   dispatch({
     type: EDIT_PLAYERS,
@@ -49,6 +53,11 @@ export const addCity = (
     type: SET_ACTION,
     payload: toDispatch.action
   });
+
+  dispatch({
+    type: UPGRADE_CITY,
+    payload: toDispatch.upgradedCities
+  })
 
   return dispatch({
     type: ADD_CITY,
@@ -62,12 +71,16 @@ export const addRoad = (
   currentPlayerIndex,
   players,
   setup,
-  action
+  action,
+  availableRoads
 ) => dispatch => {
   if (action !== "buildRoad") {
     return;
   }
   if (setup === true && players[currentPlayerIndex].roads === 13) {
+    return;
+  }
+  if(availableRoads.includes(roadIndex) === false){
     return;
   }
 
@@ -103,6 +116,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         cities: action.payload
       };
+    case UPGRADE_CITY:
+      return {
+        ...state,
+        upgradedCities: action.payload
+      }
     case ADD_ROAD:
       return {
         ...state,

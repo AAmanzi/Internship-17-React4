@@ -1,4 +1,10 @@
-import { tiles, chits, tileAdjacentCities, tileResource } from "./constants";
+import {
+  tiles,
+  chits,
+  tileAdjacentCities,
+  tileResource,
+  cityAdjacentRoads
+} from "./constants";
 
 export const getRandomTiles = () => {
   let randomTiles = tiles;
@@ -113,12 +119,14 @@ export const handleAddCity = (
   currentPlayerIndex,
   players,
   setup,
-  action
+  action,
+  upgradedCities
 ) => {
   let newCities = [...cities];
   let newPlayers = [...players];
   let newAction = action;
-  if (newCities[cityIndex] === "") {
+  let newUpgradedCities = upgradedCities;
+  if (action === "buildSettlement" && cities[cityIndex] === "") {
     let elementsToAppend = tileAdjacentCities.filter(element =>
       element.cities.includes(cityIndex)
     );
@@ -143,10 +151,22 @@ export const handleAddCity = (
       newAction = "buildRoad";
     }
   }
+  if (
+    action === "buildCity" &&
+    cities[cityIndex] === players[currentPlayerIndex].name
+  ) {
+    newPlayers[currentPlayerIndex].cities--;
+    newPlayers[currentPlayerIndex].resources.Grain -= 2;
+    newPlayers[currentPlayerIndex].resources.Ore -= 3;
+    newPlayers[currentPlayerIndex].gamePoints++;
+    newUpgradedCities.push(cityIndex);
+    newAction = "";
+  }
   return {
     cities: newCities,
     players: newPlayers,
-    action: newAction
+    action: newAction,
+    upgradedCities: newUpgradedCities
   };
 };
 
@@ -187,14 +207,53 @@ export const handleSetAction = (action, setup, currentPlayerIndex, players) => {
         players[currentPlayerIndex].resources.Wool < 1 ||
         players[currentPlayerIndex].resources.Grain < 1 ||
         players[currentPlayerIndex].resources.Lumber < 1)) ||
+    players[currentPlayerIndex].settlements === 0 ||
     (action === "buildRoad" &&
       (players[currentPlayerIndex].resources.Brick < 1 ||
         players[currentPlayerIndex].resources.Lumber < 1)) ||
+    players[currentPlayerIndex].roads === 0 ||
     (action === "buildCity" &&
       (players[currentPlayerIndex].resources.Ore < 3 ||
-        players[currentPlayerIndex].resources.Grain < 2))
+        players[currentPlayerIndex].resources.Grain < 2 ||
+        players[currentPlayerIndex].cities === 0))
   ) {
     return "insufficientResources";
   }
+
   return action;
+};
+
+export const getWinner = players => {
+  return players.find(player => player.gamePoints >= 10);
+};
+
+export const getAvailableRoads = (roads, cities, currentPlayer) => {
+  const currentPlayerRoads = getAllIndexes(roads, currentPlayer.name);
+
+  const playerRoadsAdjacentCities = [];
+
+  currentPlayerRoads.forEach(road => {
+    cityAdjacentRoads.forEach((roads, cityIndex) => {
+      if (roads.includes(road)) {
+        playerRoadsAdjacentCities.push(cityIndex);
+      }
+    });
+  });
+
+  const currentPlayerCrossroads = getAllIndexes(cities, currentPlayer.name);
+
+  playerRoadsAdjacentCities.forEach(road => {
+    currentPlayerCrossroads.push(road);
+  });
+
+  const currentPlayerAvailableRoadsWrapped = cityAdjacentRoads.filter(
+    (roads, cityIndex) => currentPlayerCrossroads.includes(cityIndex)
+  );
+  const currentPlayerAvailableRoads = [];
+
+  currentPlayerAvailableRoadsWrapped.forEach(element => {
+    currentPlayerAvailableRoads.push(...element);
+  });
+
+  return currentPlayerAvailableRoads;
 };
