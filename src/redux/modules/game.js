@@ -3,6 +3,7 @@ import * as gameConstants from "../../constants";
 
 // action types
 const NEXT_PLAYER = "NEXT_PLAYER";
+const EDIT_PLAYERS = "EDIT_PLAYERS";
 const SET_ACTION = "SET_ACTION";
 
 // initial state
@@ -15,27 +16,54 @@ const initialState = {
 };
 
 // action creators
-export const nextPlayer = (players, currentPlayerIndex, setup, tiles, chits) => dispatch => {
+export const nextPlayer = (
+  players,
+  currentPlayerIndex,
+  setup,
+  tiles,
+  chits
+) => dispatch => {
   if (
     setup === true &&
-    (
-      players[currentPlayerIndex].settlements !== 3 ||
-      players[currentPlayerIndex].roads !== 13
-    )
+    (players[currentPlayerIndex].settlements !== 3 ||
+      players[currentPlayerIndex].roads !== 13)
   ) {
     alert("You must build 2 settlements and 2 roads on your first turn!");
     return;
   }
   return dispatch({
     type: NEXT_PLAYER,
-    payload: gameUtils.handleNextPlayer(players, currentPlayerIndex, setup, tiles, chits)
+    payload: gameUtils.handleNextPlayer(
+      players,
+      currentPlayerIndex,
+      setup,
+      tiles,
+      chits
+    )
   });
 };
 
-export const setAction = (action, setup, currentPlayerIndex, players) => dispatch => {
+export const editPlayers = players => dispatch => {
+  return dispatch({
+    type: EDIT_PLAYERS,
+    payload: players
+  });
+};
+
+export const setAction = (
+  action,
+  setup,
+  currentPlayerIndex,
+  players
+) => dispatch => {
   return dispatch({
     type: SET_ACTION,
-    payload: gameUtils.handleSetAction(action, setup, currentPlayerIndex, players)
+    payload: gameUtils.handleSetAction(
+      action,
+      setup,
+      currentPlayerIndex,
+      players
+    )
   });
 };
 
@@ -50,6 +78,11 @@ const reducer = (state = initialState, action) => {
         currentPlayerIndex: action.payload.currentPlayerIndex,
         setup: action.payload.setup,
         diceRoll: action.payload.diceRoll
+      };
+    case EDIT_PLAYERS:
+      return {
+        ...state,
+        players: action.payload
       };
     case SET_ACTION:
       return {

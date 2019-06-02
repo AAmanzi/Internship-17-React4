@@ -5,6 +5,9 @@ import * as gameConstants from "../../constants";
 const ADD_CITY = "ADD_CITY";
 const ADD_ROAD = "ADD_ROAD";
 
+const EDIT_PLAYERS = "EDIT_PLAYERS";
+const SET_ACTION = "SET_ACTION";
+
 // initial state
 const initialState = {
   tiles: gameUtils.getRandomTiles(),
@@ -28,14 +31,28 @@ export const addCity = (
   if (setup === true && players[currentPlayerIndex].settlements === 3) {
     return;
   }
+  const toDispatch = gameUtils.handleAddCity(
+    cities,
+    cityIndex,
+    currentPlayerIndex,
+    players,
+    setup,
+    action
+  );
+
+  dispatch({
+    type: EDIT_PLAYERS,
+    payload: toDispatch.players
+  });
+
+  dispatch({
+    type: SET_ACTION,
+    payload: toDispatch.action
+  });
+
   return dispatch({
     type: ADD_CITY,
-    payload: gameUtils.handleAddCity(
-      cities,
-      cityIndex,
-      currentPlayerIndex,
-      players
-    )
+    payload: toDispatch.cities
   });
 };
 
@@ -53,14 +70,29 @@ export const addRoad = (
   if (setup === true && players[currentPlayerIndex].roads === 13) {
     return;
   }
+
+  const toDispatch = gameUtils.handleAddRoad(
+    roads,
+    roadIndex,
+    currentPlayerIndex,
+    players,
+    setup,
+    action
+  );
+
+  dispatch({
+    type: EDIT_PLAYERS,
+    payload: toDispatch.players
+  });
+
+  dispatch({
+    type: SET_ACTION,
+    payload: toDispatch.action
+  });
+
   return dispatch({
     type: ADD_ROAD,
-    payload: gameUtils.handleAddRoad(
-      roads,
-      roadIndex,
-      currentPlayerIndex,
-      players
-    )
+    payload: toDispatch.roads
   });
 };
 
@@ -69,14 +101,12 @@ const reducer = (state = initialState, action) => {
     case ADD_CITY:
       return {
         ...state,
-        cities: action.payload.cities,
-        players: action.payload.players
+        cities: action.payload
       };
     case ADD_ROAD:
       return {
         ...state,
-        roads: action.payload.roads,
-        players: action.payload.players
+        roads: action.payload
       };
     default:
       return state;

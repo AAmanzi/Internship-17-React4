@@ -90,13 +90,14 @@ export const handleNextPlayer = (
   chits
 ) => {
   const newDiceRoll = getDiceRoll();
+  const newSetup = currentPlayerIndex !== 3 ? setup : false;
   return {
     players:
-      setup === false
+      newSetup === false
         ? updatePlayerResources(players, newDiceRoll, tiles, chits)
         : players,
     currentPlayerIndex: (currentPlayerIndex + 1) % 4,
-    setup: currentPlayerIndex !== 3 ? setup : false,
+    setup: newSetup,
     diceRoll: newDiceRoll
   };
 };
@@ -105,10 +106,13 @@ export const handleAddCity = (
   cities,
   cityIndex,
   currentPlayerIndex,
-  players
+  players,
+  setup,
+  action
 ) => {
   let newCities = [...cities];
-  let newPlayers = players;
+  let newPlayers = [...players];
+  let newAction = action;
   if (newCities[cityIndex] === "") {
     let elementsToAppend = tileAdjacentCities.filter(element =>
       element.cities.includes(cityIndex)
@@ -122,11 +126,22 @@ export const handleAddCity = (
 
     newCities[cityIndex] = newPlayers[currentPlayerIndex].name;
     newPlayers[currentPlayerIndex].settlements--;
+    if(setup === false){
+      newPlayers[currentPlayerIndex].resources.Brick--;
+      newPlayers[currentPlayerIndex].resources.Grain--;
+      newPlayers[currentPlayerIndex].resources.Wool--;
+      newPlayers[currentPlayerIndex].resources.Lumber--;
+      newAction = "";
+    }
     newPlayers[currentPlayerIndex].gamePoints++;
+    if(newPlayers[currentPlayerIndex].settlements === 3 && setup === true){
+      newAction = "buildRoad";
+    }
   }
   return {
     cities: newCities,
-    players: newPlayers
+    players: newPlayers,
+    action: newAction
   };
 };
 
@@ -134,17 +149,26 @@ export const handleAddRoad = (
   roads,
   roadIndex,
   currentPlayerIndex,
-  players
+  players,
+  setup,
+  action
 ) => {
   let newRoads = [...roads];
-  let newPlayers = players;
+  let newPlayers = [...players];
+  let newAction = action;
   if (newRoads[roadIndex] === "") {
     newRoads[roadIndex] = newPlayers[currentPlayerIndex].name;
     newPlayers[currentPlayerIndex].roads--;
+    if(setup === false){
+      newPlayers[currentPlayerIndex].resources.Lumber--;
+      newPlayers[currentPlayerIndex].resources.Brick--;
+      newAction = "";
+    }
   }
   return {
     roads: newRoads,
-    players: newPlayers
+    players: newPlayers,
+    action: newAction
   };
 };
 

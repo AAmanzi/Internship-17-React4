@@ -25,6 +25,7 @@ class Game extends Component {
               {players[currentPlayerIndex].name}
             </b>
           </h1>
+          <h2>{players[currentPlayerIndex].settlements}</h2>
           {setup === false ? <h2>{`Dice roll: ${diceRoll}`}</h2> : null}
           <div className="ActionContainer">
             {actionTypes.map((action, index) => {
