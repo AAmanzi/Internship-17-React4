@@ -21,7 +21,8 @@ export const nextPlayer = (
   currentPlayerIndex,
   setup,
   tiles,
-  chits
+  chits,
+  upgradedCities
 ) => dispatch => {
   if (
     setup === true &&
@@ -38,7 +39,8 @@ export const nextPlayer = (
       currentPlayerIndex,
       setup,
       tiles,
-      chits
+      chits,
+      upgradedCities
     )
   });
 };
@@ -49,6 +51,13 @@ export const editPlayers = players => dispatch => {
     payload: players
   });
 };
+
+export const appendPlayerNames = (players, names) => dispatch => {
+  return dispatch({
+    type: EDIT_PLAYERS,
+    payload: gameUtils.randomizeArray(gameUtils.handleAppendNames(players, names))
+  })
+}
 
 export const setAction = (
   action,

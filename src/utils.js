@@ -1,32 +1,18 @@
 import {
-  tiles,
-  chits,
   tileAdjacentCities,
   tileResource,
   cityAdjacentRoads
 } from "./constants";
 
-export const getRandomTiles = () => {
-  let randomTiles = tiles;
-  let currentIndex = randomTiles.length,
-    temporaryValue,
-    randomIndex;
+export const isNullOrWhitespace = input => {
+  if (typeof input === "undefined" || input == null) return true;
 
-  while (0 !== currentIndex) {
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-
-    temporaryValue = randomTiles[currentIndex];
-    randomTiles[currentIndex] = randomTiles[randomIndex];
-    randomTiles[randomIndex] = temporaryValue;
-  }
-
-  return randomTiles;
+  return input.replace(/\s/g, "").length < 1;
 };
 
-export const getRandomChits = () => {
-  let randomChits = chits;
-  let currentIndex = randomChits.length,
+export const randomizeArray = array => {
+  let randomArray = array;
+  let currentIndex = randomArray.length,
     temporaryValue,
     randomIndex;
 
@@ -34,12 +20,12 @@ export const getRandomChits = () => {
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex -= 1;
 
-    temporaryValue = randomChits[currentIndex];
-    randomChits[currentIndex] = randomChits[randomIndex];
-    randomChits[randomIndex] = temporaryValue;
+    temporaryValue = randomArray[currentIndex];
+    randomArray[currentIndex] = randomArray[randomIndex];
+    randomArray[randomIndex] = temporaryValue;
   }
 
-  return randomChits;
+  return randomArray;
 };
 
 export const getAllIndexes = (arr, val) => {
@@ -59,7 +45,13 @@ export const getDiceRoll = () => {
   return Math.floor(Math.random() * 6 + 1) + Math.floor(Math.random() * 6 + 1);
 };
 
-export const updatePlayerResources = (players, diceRoll, tiles, chits) => {
+export const updatePlayerResources = (
+  players,
+  diceRoll,
+  tiles,
+  chits,
+  upgradedCities
+) => {
   const producingTileIndexes = getAllIndexes(chits, diceRoll);
 
   const newPlayers = players.map(player => {
@@ -74,6 +66,12 @@ export const updatePlayerResources = (players, diceRoll, tiles, chits) => {
     const playerAffectingTiles = playerProducingTileIndexes.map(
       index => tiles[index]
     );
+
+    playerProducingTileIndexes.forEach(index => {
+      if (upgradedCities.includes(index)) {
+        playerAffectingTiles.push(tiles[index]);
+      }
+    });
 
     let newResources = { ...player.resources };
 
@@ -98,16 +96,23 @@ export const handleNextPlayer = (
   currentPlayerIndex,
   setup,
   tiles,
-  chits
+  chits,
+  upgradedCities
 ) => {
   const newDiceRoll = getDiceRoll();
-  const newSetup = currentPlayerIndex !== 3 ? setup : false;
+  const newSetup = currentPlayerIndex !== players.length - 1 ? setup : false;
   return {
     players:
       newSetup === false
-        ? updatePlayerResources(players, newDiceRoll, tiles, chits)
+        ? updatePlayerResources(
+            players,
+            newDiceRoll,
+            tiles,
+            chits,
+            upgradedCities
+          )
         : players,
-    currentPlayerIndex: (currentPlayerIndex + 1) % 4,
+    currentPlayerIndex: (currentPlayerIndex + 1) % players.length,
     setup: newSetup,
     diceRoll: newDiceRoll
   };
@@ -137,7 +142,7 @@ export const handleAddCity = (
       ...elementsToAppend
     ];
 
-    newCities[cityIndex] = newPlayers[currentPlayerIndex].name;
+    newCities[cityIndex] = newPlayers[currentPlayerIndex].colour;
     newPlayers[currentPlayerIndex].settlements--;
     if (setup === false) {
       newPlayers[currentPlayerIndex].resources.Brick--;
@@ -153,7 +158,7 @@ export const handleAddCity = (
   }
   if (
     action === "buildCity" &&
-    cities[cityIndex] === players[currentPlayerIndex].name
+    cities[cityIndex] === players[currentPlayerIndex].colour
   ) {
     newPlayers[currentPlayerIndex].cities--;
     newPlayers[currentPlayerIndex].resources.Grain -= 2;
@@ -182,7 +187,7 @@ export const handleAddRoad = (
   let newPlayers = [...players];
   let newAction = action;
   if (newRoads[roadIndex] === "") {
-    newRoads[roadIndex] = newPlayers[currentPlayerIndex].name;
+    newRoads[roadIndex] = newPlayers[currentPlayerIndex].colour;
     newPlayers[currentPlayerIndex].roads--;
     if (setup === false) {
       newPlayers[currentPlayerIndex].resources.Lumber--;
@@ -228,7 +233,7 @@ export const getWinner = players => {
 };
 
 export const getAvailableRoads = (roads, cities, currentPlayer) => {
-  const currentPlayerRoads = getAllIndexes(roads, currentPlayer.name);
+  const currentPlayerRoads = getAllIndexes(roads, currentPlayer.colour);
 
   const playerRoadsAdjacentCities = [];
 
@@ -240,8 +245,7 @@ export const getAvailableRoads = (roads, cities, currentPlayer) => {
     });
   });
 
-  const currentPlayerCrossroads = getAllIndexes(cities, currentPlayer.name);
-
+  const currentPlayerCrossroads = getAllIndexes(cities, currentPlayer.colour);
   playerRoadsAdjacentCities.forEach(road => {
     currentPlayerCrossroads.push(road);
   });
@@ -259,9 +263,9 @@ export const getAvailableRoads = (roads, cities, currentPlayer) => {
 };
 
 export const getAvailableCities = (roads, currentPlayer) => {
-  const currentPlayerRoads = getAllIndexes(roads, currentPlayer.name);
+  const currentPlayerRoads = getAllIndexes(roads, currentPlayer.colour);
 
-  const playerRoadsAdjacentCities = [];
+  let playerRoadsAdjacentCities = [];
 
   currentPlayerRoads.forEach(road => {
     cityAdjacentRoads.forEach((roads, cityIndex) => {
@@ -269,7 +273,24 @@ export const getAvailableCities = (roads, currentPlayer) => {
         playerRoadsAdjacentCities.push(cityIndex);
       }
     });
-  })
+  });
+
+  const availableCitiesAdjacentRoadsWrapped = cityAdjacentRoads.filter(
+    (roads, cityIndex) => playerRoadsAdjacentCities.includes(cityIndex)
+  );
+  const availableCitiesAdjacentRoads = [];
+
+  availableCitiesAdjacentRoadsWrapped.forEach(element => {
+    availableCitiesAdjacentRoads.push(...element);
+  });
 
   return playerRoadsAdjacentCities;
-}
+};
+
+export const handleAppendNames = (players, names) => {
+  let newPlayers = players.map((player, index) => {
+    player.name = names[index];
+    return player;
+  });
+  return newPlayers.filter(player => !isNullOrWhitespace(player.name));
+};

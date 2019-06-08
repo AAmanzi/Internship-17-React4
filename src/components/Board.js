@@ -56,7 +56,7 @@ const Board = props => {
                       setup === false) ||
                       setup === true)) ||
                   (activeAction === "buildCity" &&
-                    city === players[currentPlayerIndex].name &&
+                    city === players[currentPlayerIndex].colour &&
                     upgradedCities.includes(row.start + j) === false)
                 }
                 colour={`Background${city}`}

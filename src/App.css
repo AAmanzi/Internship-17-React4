@@ -1,14 +1,33 @@
+body {
+  margin: 0;
+  height: 100vh;
+  background-image: linear-gradient(
+    to right top,
+    #052137,
+    #004f72,
+    #008496,
+    #00b995,
+    #12eb70
+  );
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 b {
   font-size: inherit;
 }
 
-button{
+button {
   cursor: pointer;
 }
 
 line {
   stroke: transparent;
   stroke-width: 15px;
+}
+
+h1, h2 {
+  color: #ddd;
 }
 
 .Game {

@@ -95,7 +95,7 @@
 }
 
 .StrokeHighlighted {
-  stroke: #9dd2b5;
+  stroke: #eee;
 }
 
 .TextRed {
@@ -112,4 +112,20 @@
 
 .TextYellow {
   color: goldenrod;
+}
+
+.BorderRed {
+  border-color: red;
+}
+
+.BorderBlue {
+  border-color: blue;
+}
+
+.BorderGreen {
+  border-color: green;
+}
+
+.BorderYellow {
+  border-color: goldenrod;
 }

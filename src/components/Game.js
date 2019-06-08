@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import { nextPlayer, setAction } from "../redux/modules/game";
 import { actionTypes } from "../constants";
-import { getWinner } from "../utils";
+import { isNullOrWhitespace, getWinner } from "../utils";
 import Board from "./Board";
 import WinnerDisplay from "./WinnerDisplay";
 
@@ -15,7 +16,8 @@ class Game extends Component {
       players,
       diceRoll,
       tiles,
-      chits
+      chits,
+      upgradedCities
     } = this.props;
 
     const winner = getWinner(players);
@@ -24,12 +26,16 @@ class Game extends Component {
       return <WinnerDisplay winner={winner} />;
     }
 
+    if (isNullOrWhitespace(players[0].name)) {
+      this.props.history.push("/");
+    }
+
     return (
       <div className="Game">
         <div className="GamePanel">
           <h1>
             Currently playing:{" "}
-            <b className={`Text${players[currentPlayerIndex].name}`}>
+            <b className={`Text${players[currentPlayerIndex].colour}`}>
               {players[currentPlayerIndex].name}
             </b>
           </h1>
@@ -83,13 +89,15 @@ class Game extends Component {
           </div>
 
           <button
+            className="ButtonNext"
             onClick={() =>
               this.props.nextPlayer(
                 players,
                 currentPlayerIndex,
                 setup,
                 tiles,
-                chits
+                chits,
+                upgradedCities
               )
             }
           >
@@ -114,7 +122,8 @@ const mapStateToProps = state => {
     players: state.game.players,
     diceRoll: state.game.diceRoll,
     tiles: state.board.tiles,
-    chits: state.board.chits
+    chits: state.board.chits,
+    upgradedCities: state.board.upgradedCities
   };
 };
 
@@ -126,4 +135,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Game);
+)(withRouter(Game));

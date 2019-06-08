@@ -11,8 +11,8 @@ const SET_ACTION = "SET_ACTION";
 
 // initial state
 const initialState = {
-  tiles: gameUtils.getRandomTiles(),
-  chits: gameUtils.getRandomChits(),
+  tiles: gameUtils.randomizeArray(gameConstants.tiles),
+  chits: gameUtils.randomizeArray(gameConstants.chits),
   cities: gameConstants.startCities,
   upgradedCities: [],
   roads: gameConstants.startRoads
@@ -38,7 +38,7 @@ export const addCity = (
   if (
     (setup === false &&
       availableCities.includes(cityIndex) === false &&
-      cities[cityIndex] !== players[currentPlayerIndex].name) ||
+      cities[cityIndex] !== players[currentPlayerIndex].colour) ||
     upgradedCities.includes(cityIndex) === true
   ) {
     return;
